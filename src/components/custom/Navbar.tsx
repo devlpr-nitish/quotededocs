@@ -19,8 +19,8 @@ const Navbar = () => {
         }
         , {
             id: 4,
-            title: 'Login',
-            url: '/login'
+            title: 'Sign In',
+            url: '/signin'
         }
     ];
 

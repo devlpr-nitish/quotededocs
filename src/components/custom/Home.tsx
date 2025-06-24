@@ -95,7 +95,7 @@ export default function HomePage() {
                 }),
             });
 
-            
+
 
 
             if (!response.ok) {
@@ -151,7 +151,7 @@ export default function HomePage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
             >
-                <h1 className="text-4xl font-bold text-foreground mb-4">       Convert Handwritten Text to <span className="text-green-600">Beautiful</span> Designs
+                <h1 className="text-4xl font-bold text-foreground mb-4">       Convert Handwritten Text to <span className="text-primary">Beautiful</span> Designs
                 </h1>
                 <p className="text-muted-foreground text-lg mb-8">
                     Upload your handwritten image, extract text, and style it to create
@@ -168,7 +168,7 @@ export default function HomePage() {
                 <Card className="p-6 shadow-lg">
                     <CardContent className="space-y-4">
                         <div className="flex items-center gap-3">
-                            <Upload className="text-green-400" />
+                            <Upload className="text-primary" />
                             <p className="font-semibold text-foreground">Upload Handwritten Image</p>
                         </div>
                         <Input type="file" accept="image/*" onChange={(e) => {
@@ -188,7 +188,7 @@ export default function HomePage() {
                         }} />
 
                         <div className="flex items-center gap-3">
-                            <Text className="text-green-400" />
+                            <Text className="text-primary" />
                             <p className="font-semibold text-foreground">Extracted Text</p>
                         </div>
                         {isExtracting ? (
@@ -209,8 +209,8 @@ export default function HomePage() {
                         )}
 
                         <div className="flex items-center gap-3">
-                            <Checkbox id="ai-generated" className="cursor-pointer  border-green-400" checked={useAi} onCheckedChange={(checked) => setUseAi(checked === 'indeterminate' ? false : checked)} />
-                            <label htmlFor="ai-generated" className="text-sm font-medium text-foreground cursor-pointer">Use <span className="text-blue-400 font-bold">AI</span> to align and structure the text</label>
+                            <Checkbox id="ai-generated" className="cursor-pointer border-primary" checked={useAi} onCheckedChange={(checked) => setUseAi(checked === 'indeterminate' ? false : checked)} />
+                            <label htmlFor="ai-generated" className="text-sm font-medium text-foreground cursor-pointer">Use <span className="text-accent font-bold">AI</span> to align and structure the text</label>
                         </div>
                     </CardContent>
                 </Card>
@@ -284,10 +284,7 @@ export default function HomePage() {
                                         variant={selectedPreset === preset.name ? "default" : "outline"}
                                         size="sm"
                                         onClick={() => applyPreset(preset)}
-                                        className={`text-xs h-8 ${selectedPreset === preset.name
-                                            ? "bg-green-600 hover:bg-green-700 text-white"
-                                            : ""
-                                            }`}
+                                        className={`text-xs h-8${selectedPreset === preset.name ? " bg-primary hover:bg-primary/90 text-primary-foreground" : ""}`}
                                     >
                                         {preset.name}
                                     </Button>
@@ -319,7 +316,7 @@ export default function HomePage() {
                                 />
                             </div>
                         </div>
-                        <Button className="w-full bg-green-600 hover:bg-green-700 text-white cursor-pointer" onClick={handleGenerateDesign} disabled={isGenerating || isExtracting}>
+                        <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground cursor-pointer" onClick={handleGenerateDesign} disabled={isGenerating || isExtracting}>
                             {isExtracting ? 'Extracting Text...' : isGenerating ? 'Generating Design...' : 'Generate Design'}
                         </Button>
                     </CardContent>
@@ -348,7 +345,7 @@ export default function HomePage() {
                             <>
                                 <button
                                     onClick={downloadImage}
-                                    className="absolute top-2 right-2 bg-green-600 text-white p-2 rounded-full hover:bg-green-700 transition-colors shadow-lg z-10"
+                                    className="absolute top-2 right-2 bg-primary text-primary-foreground p-2 rounded-full hover:bg-primary/90 transition-colors shadow-lg z-10"
                                     title="Download Image"
                                 >
                                     <Download className="w-4 h-4 cursor-pointer" />
