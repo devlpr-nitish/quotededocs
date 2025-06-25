@@ -8,18 +8,25 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link';
 import { FaGoogle, FaGithub } from "react-icons/fa";
+import { toast } from 'sonner';
+import { useSession } from 'next-auth/react';
 
 export default function SignIn() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [loading, setLoading] = useState(false)
-    const [error, setError] = useState('')
     const [providers, setProviders] = useState<any>(null)
-
+    const { data: session } = useSession()
     const router = useRouter()
     const searchParams = useSearchParams()
     const callbackUrl = searchParams.get('callbackUrl') || '/'
-    const urlError = searchParams.get('error')
+    const urlError = searchParams.get('error');
+
+    // if user is already signed in, redirect to home page
+    if (session) {
+        router.push('/')
+    }
+
 
     useEffect(() => {
         // Get available providers
@@ -27,14 +34,13 @@ export default function SignIn() {
 
         // Show error from URL params
         if (urlError) {
-            setError(getErrorMessage(urlError))
+            toast.error(getErrorMessage(urlError))
         }
     }, [urlError])
 
     const handleCredentialsSignIn = async (e: React.FormEvent) => {
         e.preventDefault()
         setLoading(true)
-        setError('')
 
         try {
             const result = await signIn('credentials', {
@@ -45,12 +51,13 @@ export default function SignIn() {
             })
 
             if (result?.error) {
-                setError('Invalid email or password')
+                toast.error('Invalid email or password')
             } else if (result?.ok) {
+                toast.success('Signed in successfully!')
                 router.push(callbackUrl)
             }
         } catch (error) {
-            setError('An error occurred. Please try again.')
+            toast.error('An error occurred. Please try again.')
         } finally {
             setLoading(false)
         }
@@ -84,16 +91,9 @@ export default function SignIn() {
             <div className="max-w-md w-full space-y-8">
                 <div>
                     <h2 className="mt-6 text-center text-3xl font-extrabold text-foreground">
-                        Sign in to your account
+                        Welcome back
                     </h2>
                 </div>
-
-                {/* Error Message */}
-                {error && (
-                    <div className="bg-destructive border border-destructive/20 text-destructive-foreground px-4 py-3 rounded-md">
-                        {error}
-                    </div>
-                )}
 
                 {/* Credentials Form */}
                 <form className="mt-8 space-y-6" onSubmit={handleCredentialsSignIn}>

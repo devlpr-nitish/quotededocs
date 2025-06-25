@@ -10,6 +10,7 @@ import { extractTextFromImageAllLanguages } from "@/lib/extractText";
 import { Skeleton } from "@/components/ui/skeleton";
 import generateText from "@/lib/ai-text";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useSession } from "next-auth/react";
 
 export default function HomePage() {
 
@@ -143,6 +144,14 @@ export default function HomePage() {
         }
     };
 
+    const { data: session } = useSession();
+    const handleAitoggle = (checked: boolean) => {
+        if (checked && !session) {
+            toast.error('Please sign in to use AI');
+            return;
+        }
+        setUseAi(checked);
+    }
     return (
         <div className="min-h-screen bg-background">
             <motion.div
@@ -209,8 +218,8 @@ export default function HomePage() {
                         )}
 
                         <div className="flex items-center gap-3">
-                            <Checkbox id="ai-generated" className="cursor-pointer border-primary" checked={useAi} onCheckedChange={(checked) => setUseAi(checked === 'indeterminate' ? false : checked)} />
-                            <label htmlFor="ai-generated" className="text-sm font-medium text-foreground cursor-pointer">Use <span className="text-accent font-bold">AI</span> to align and structure the text</label>
+                            <Checkbox id="ai-generated" className="cursor-pointer border-primary" checked={useAi} onCheckedChange={(checked) => handleAitoggle(checked === 'indeterminate' ? false : checked)} />
+                            <label htmlFor="ai-generated" className="text-sm font-medium text-foreground cursor-pointer">Use <span className="text-primary font-bold">AI</span> to align and structure the text</label>
                         </div>
                     </CardContent>
                 </Card>
