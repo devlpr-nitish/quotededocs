@@ -3,7 +3,7 @@ import { Skeleton } from '../ui/skeleton'
 
 const NavSkeleton = () => {
     return (
-        <nav className="max-w-5xl mx-auto">
+        <nav className="max-w-5xl mx-auto py-2 px-4">
             <div className='hidden md:flex justify-between items-center'>
                 <ul className="w-full md:flex gap-46 justify-between items-center">
                     <li className="px-2 py-4">

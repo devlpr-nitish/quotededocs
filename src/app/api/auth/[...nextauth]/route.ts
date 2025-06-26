@@ -7,19 +7,20 @@ import bcrypt from "bcryptjs"
 
 const handler = NextAuth({
     providers: [
-        GitHubProvider({
-            clientId: process.env.GITHUB_CLIENT_ID || "",
-            clientSecret: process.env.GITHUB_CLIENT_SECRET || "",
-        }),
+        // OAuth providers
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID || "",
             clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
         }),
+        GitHubProvider({
+            clientId: process.env.GITHUB_CLIENT_ID || "",
+            clientSecret: process.env.GITHUB_CLIENT_SECRET || "",
+        }),
         CredentialsProvider({
             name: "Credentials",
             credentials: {
-                email: { label: "Email", type: "email", placeholder: "devlprnitish@gmail.com" },
-                password: { label: "Password", type: "password", placeholder: "********" }
+                // email: { label: "Email", type: "email", placeholder: "devlprnitish@gmail.com" },
+                // password: { label: "Password", type: "password", placeholder: "********" }
             },
             async authorize(credentials: any) {
                 if (!credentials?.email || !credentials?.password) {

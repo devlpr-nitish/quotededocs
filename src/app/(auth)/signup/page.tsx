@@ -6,9 +6,13 @@ import { useEffect } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link';
-import { FaGoogle, FaGithub } from "react-icons/fa";
 import { toast } from 'sonner';
 import axios from 'axios';
+import AuthProviders from '@/components/custom/auth-providers';
+import AuthSkeleton from '@/components/custom/auth-skeleton';
+
+
+
 
 export default function SignUp() {
   const [name, setName] = useState('');
@@ -82,7 +86,7 @@ export default function SignUp() {
   }
 
   return (
-    <div className="min-h-[18rem] flex items-center justify-center bg-background py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-[calc(100vh-15rem)] flex items-center justify-center bg-background py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-foreground">
@@ -152,7 +156,7 @@ export default function SignUp() {
         </form>
 
         {/* OAuth Providers */}
-        {providers && (
+        
           <div className="mt-6">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
@@ -162,29 +166,12 @@ export default function SignUp() {
                 <span className="px-2 bg-background text-muted-foreground">Or continue with</span>
               </div>
             </div>
-
-            <div className="mt-6 grid grid-cols-1 gap-3">
-              {Object.values(providers).map((provider: any) => {
-                if (provider.id === 'credentials') return null
-
-                let Icon = null
-                if (provider.id === 'github') Icon = FaGithub
-                else if (provider.id === 'google') Icon = FaGoogle
-
-                return (
-                  <Button
-                    key={provider.id}
-                    onClick={() => handleOAuthSignIn(provider.id)}
-                    className="w-full inline-flex justify-center py-2 px-4 border border-input rounded-md shadow-sm bg-background text-sm font-medium text-foreground hover:bg-accent hover:text-accent-foreground cursor-pointer gap-2"
-                  >
-                    {Icon && <Icon className="mr-2 h-5 w-5" />}
-                    <span className="capitalize">{provider.name}</span>
-                  </Button>
-                )
-              })}
-            </div>
+            {
+              !providers ? <AuthSkeleton /> : (
+                <AuthProviders providers={providers} handleOAuthSignIn={handleOAuthSignIn} />
+              )
+            }
           </div>
-        )}
 
         {/* Sign Up Link */}
         <div className="text-center">

@@ -153,7 +153,7 @@ export default function HomePage() {
         setUseAi(checked);
     }
     return (
-        <div className="min-h-screen bg-background">
+        <div className="min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8">
             <motion.div
                 className="max-w-4xl mx-auto text-center"
                 initial={{ opacity: 0, y: -30 }}
@@ -162,7 +162,7 @@ export default function HomePage() {
             >
                 <h1 className="text-4xl font-bold text-foreground mb-4">       Convert Handwritten Text to <span className="text-primary">Beautiful</span> Designs
                 </h1>
-                <p className="text-muted-foreground text-lg mb-8">
+                <p className="text-muted-foreground text-sm md:text-lg mb-8">
                     Upload your handwritten image, extract text, and style it to create
                     stunning visuals to share anywhere.
                 </p>
@@ -171,8 +171,9 @@ export default function HomePage() {
             <motion.div
                 className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto"
                 initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
+                whileInView={{ opacity: 1 }}
                 transition={{ delay: 0.3, duration: 0.8 }}
+                viewport={{ once: true }}
             >
                 <Card className="p-6 shadow-lg">
                     <CardContent className="space-y-4">
@@ -334,10 +335,12 @@ export default function HomePage() {
 
             <motion.div
                 ref={previewRef}
-                className="mt-12 max-w-3xl mx-auto text-center"
+                className="mt-12 max-w-5xl mx-auto text-center"
                 initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 1, y: 0 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5, duration: 0.7 }}
+                viewport={{ once: true }}
+            
             >
                 <div className="space-y-4">
                     <h3 className="text-lg font-medium text-foreground">Preview</h3>
@@ -372,6 +375,14 @@ export default function HomePage() {
                         )}
                     </div>
                 </div>
+            </motion.div>
+
+            <motion.div
+                className="mt-12 max-w-5xl mx-auto text-center"
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.7 }}
+            >
             </motion.div>
         </div>
     );
