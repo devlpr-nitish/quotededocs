@@ -27,7 +27,7 @@ const Navbar = () => {
 
     return (
         <nav className="max-w-5xl mx-auto py-2 px-4">
-            {/* Desktop Menu */}
+            
             <div className='hidden md:flex justify-between items-center'>
                 <ul className=" w-full md:flex gap-46 justify-between items-center">
                     {
@@ -52,7 +52,7 @@ const Navbar = () => {
                     <ModeToggle setIsOpen={setIsOpen}/>
                 </div>
             </div>
-            {/* Mobile Menu Button */}
+            
             <div className="md:hidden flex justify-between items-center p-4">
                 <div>
                     <Link href={'/'}>
@@ -64,7 +64,7 @@ const Navbar = () => {
                 </button>
             </div>
 
-            {/* Mobile Menu */}
+            
             {isOpen && (
                 <ul className="md:hidden flex flex-col justify-between items-center">
                     {

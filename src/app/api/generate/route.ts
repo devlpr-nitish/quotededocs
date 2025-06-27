@@ -1,4 +1,4 @@
-import { createCanvas, CanvasRenderingContext2D } from 'canvas';
+import { createCanvas, CanvasRenderingContext2D, loadImage } from 'canvas';
 import { NextRequest, NextResponse } from 'next/server';
 
 
@@ -13,6 +13,7 @@ interface ImageGenerationRequest {
     height?: number;
     textAlign?: 'left' | 'center' | 'right';
     fontWeight?: 'normal' | 'bold' | 'lighter';
+    customImage?: string;
 }
 
 interface ImageGenerationResponse {
@@ -23,7 +24,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     try {
         const body: ImageGenerationRequest = await request.json();
 
-        const {
+        let {
             text,
             fontFamily = 'Arial',
             fontSize = 48,
@@ -32,7 +33,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             width = 800,
             height = 400,
             textAlign = 'center',
-            fontWeight = 'normal'
+            fontWeight = 'normal',
+            customImage
         } = body;
 
         // Validate required fields
@@ -41,6 +43,35 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
                 { error: 'Text is required' } as ImageGenerationResponse,
                 { status: 400 }
             );
+        }
+
+        console.log(customImage);
+        if (customImage) {
+            const image = await loadImage(customImage);
+            height = image.height;
+            width = image.width;
+            const imageCanvas = createCanvas(width, height);
+            const ctx = imageCanvas.getContext('2d');
+            ctx.drawImage(image, 0, 0, width, height);
+
+            ctx.font = `${fontSize}px ${fontFamily}`;
+            ctx.fillStyle = color;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            const textX = textAlign === 'center' ? imageCanvas.width / 2 :
+                textAlign === 'right' ? imageCanvas.width - 20 : 20;
+            const textY = imageCanvas.height / 2;
+
+            ctx.fillText(text, textX, textY);
+
+            const buffer = imageCanvas.toBuffer('image/png');
+            return new NextResponse(buffer, {
+                headers: {
+                    'Content-Type': 'image/png',
+                    'Cache-Control': 'public, max-age=31536000',
+                },
+            });
         }
 
 

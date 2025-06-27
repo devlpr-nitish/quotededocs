@@ -11,10 +11,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import generateText from "@/lib/ai-text";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useSession } from "next-auth/react";
+import CustomCanvas from "./custom-canvas";
+import { imagePresets } from "@/lib/constants";
 
 export default function HomePage() {
 
-    // Separate state variables for each form field
     const [text, setText] = useState('Hello World!');
     const [fontFamily, setFontFamily] = useState('Arial');
     const [fontSize, setFontSize] = useState(24);
@@ -27,30 +28,16 @@ export default function HomePage() {
     const [image, setImage] = useState<File | null>(null);
     const [isGenerating, setIsGenerating] = useState(false);
     const [isExtracting, setIsExtracting] = useState(false);
-
     const [imageUrl, setImageUrl] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>('');
     const [selectedPreset, setSelectedPreset] = useState<string>('Custom');
+    const [customImage, setCustomImage] = useState<string>('');
 
     const [useAi, setUseAi] = useState(false);
 
-    // Ref for the preview section
     const previewRef = useRef<HTMLDivElement>(null);
-
-    // Image size presets for social media platforms
-    const imagePresets = [
-        { name: 'Instagram Story', width: 1080, height: 1920 },
-        { name: 'Instagram Post', width: 1080, height: 1080 },
-        { name: 'Instagram Reel', width: 1080, height: 1920 },
-        { name: 'Twitter Post', width: 1200, height: 675 },
-        { name: 'Facebook Post', width: 1200, height: 630 },
-        { name: 'LinkedIn Post', width: 1200, height: 627 },
-        { name: 'YouTube Thumbnail', width: 1280, height: 720 },
-        { name: 'Pinterest Pin', width: 1000, height: 1500 },
-        { name: 'TikTok Video', width: 1080, height: 1920 },
-        { name: 'Custom', width: 800, height: 400 },
-    ];
+    
 
     const applyPreset = (preset: { name: string; width: number; height: number }) => {
         setWidth(preset.width);
@@ -60,10 +47,9 @@ export default function HomePage() {
     };
 
 
-    const handleGenerateDesign = async () => {
+    const handleGenerateDesign = async ({customImage}: {customImage: string}) => {
         setIsGenerating(true);
 
-        // Scroll to preview section
         if (previewRef.current) {
             previewRef.current.scrollIntoView({
                 behavior: 'smooth',
@@ -75,7 +61,6 @@ export default function HomePage() {
             let aiText = text;
             if (useAi) {
                 aiText = await generateText(text);
-                console.log(aiText);
             }
 
             const response = await fetch('/api/generate', {
@@ -93,6 +78,7 @@ export default function HomePage() {
                     height,
                     textAlign,
                     fontWeight,
+                    customImage: customImage || undefined,
                 }),
             });
 
@@ -113,7 +99,6 @@ export default function HomePage() {
 
             setImageUrl(url);
 
-            // Scroll to bottom element
             setTimeout(() => {
                 if (previewRef.current) {
                     previewRef.current.scrollIntoView({
@@ -158,12 +143,12 @@ export default function HomePage() {
                 className="max-w-4xl mx-auto text-center"
                 initial={{ opacity: 0, y: -30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
+                transition={{ duration: 0.6 }}  
             >
-                <h1 className="text-4xl font-bold text-foreground mb-4">       Convert Handwritten Text to <span className="text-primary">Beautiful</span> Designs
+                <h1 className="text-xl md:text-4xl font-bold text-foreground mb-4">       Transform Unstructured Content into  <span className="text-primary">Beautiful,</span> Stunning, Structured <span className="text-primary">Design</span> Using AI
                 </h1>
                 <p className="text-muted-foreground text-sm md:text-lg mb-8">
-                    Upload your handwritten image, extract text, and style it to create
+                    Upload your unstructured paragraphs, extract text, and style it to create
                     stunning visuals to share anywhere.
                 </p>
             </motion.div>
@@ -179,7 +164,7 @@ export default function HomePage() {
                     <CardContent className="space-y-4">
                         <div className="flex items-center gap-3">
                             <Upload className="text-primary" />
-                            <p className="font-semibold text-foreground">Upload Handwritten Image</p>
+                            <p className="font-semibold text-foreground">Upload Unstructured Image</p>
                         </div>
                         <Input type="file" accept="image/*" onChange={(e) => {
                             setImage(e.target.files?.[0] || null);
@@ -284,7 +269,6 @@ export default function HomePage() {
                             </div>
                         </div>
 
-                        {/* Image Size Presets */}
                         <div className="space-y-3">
                             <label className="text-sm font-medium text-foreground">Image Size Presets</label>
                             <div className="grid grid-cols-2 gap-2">
@@ -326,12 +310,14 @@ export default function HomePage() {
                                 />
                             </div>
                         </div>
-                        <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground cursor-pointer" onClick={handleGenerateDesign} disabled={isGenerating || isExtracting}>
+                        <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground cursor-pointer" onClick={() => handleGenerateDesign({customImage: ''})} disabled={isGenerating || isExtracting}>
                             {isExtracting ? 'Extracting Text...' : isGenerating ? 'Generating Design...' : 'Generate Design'}
                         </Button>
                     </CardContent>
                 </Card>
             </motion.div>
+
+            <CustomCanvas setCustomImage={setCustomImage} handleGenerateDesign={handleGenerateDesign} isGenerating={isGenerating} isExtracting={isExtracting} />
 
             <motion.div
                 ref={previewRef}

@@ -1,7 +1,7 @@
 "use client";
 
-import { ThemeProvider } from "@/components/theme-provider";
-import Navbar from "@/components/custom/Navbar";
+import { ThemeProvider } from "@/components/ui/theme-provider";
+import Navbar from "@/components/custom/navbar";
 import { Toaster } from "sonner";
 import { SessionProvider } from "next-auth/react";
 import Footer from "@/components/custom/Footer";
